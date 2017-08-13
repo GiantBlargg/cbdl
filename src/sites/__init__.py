@@ -15,11 +15,16 @@ def siteHandle(url, col):
 
 def _dynasty(loc, col):
 	loc = loc.split("/")
-	if loc[0] != "chapters":
-		print(loc[0]+" are unsupported.")
-		exit(1)
+	if loc[0] == "chapters":
+		return _chapter(loc[1], col, {})
 
-	_chapter(loc[1], col, {})
+
+	if loc[0] == "series":
+		return _series(loc[1], col, {})
+
+
+	print(loc[0]+" are unsupported.")
+	exit(1)
 
 def _chapter(name, col, meta):
 	r = requests.get("https://dynasty-scans.com/chapters/"+name+".json").json()
@@ -29,3 +34,8 @@ def _chapter(name, col, meta):
 		print(meta["name"])
 		col.add(requests.get("https://dynasty-scans.com"+page["url"]).content, meta)
 
+def _series(name, col, meta):
+	r = requests.get("https://dynasty-scans.com/series/"+name+".json").json()
+	for i in r["taggings"]:
+		print(i["title"])
+		_chapter(i["permalink"],col,meta)
