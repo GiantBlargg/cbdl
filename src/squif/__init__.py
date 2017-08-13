@@ -18,7 +18,7 @@ class SquiCol:
 		pass
 
 	def add(self, file, meta):
-		arc = SquiFile(meta["title"],"a")
-		destFile = arc.open(meta["name"],"w")
+		arc = SquiFile(meta["title"], "a")
+		destFile = arc.open(meta["name"] + "." + meta["ext"], "w")
 		destFile.write(file)
 		destFile.close()

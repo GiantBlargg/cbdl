@@ -30,7 +30,8 @@ def _chapter(name, col, meta):
 	r = requests.get("https://dynasty-scans.com/chapters/"+name+".json").json()
 	meta["title"] = r["title"]
 	for page in r["pages"]:
-		meta["name"] = page["name"] + "." + page["url"].split(".").pop()
+		meta["name"] = page["name"]
+		meta["ext"] = page["url"].split(".").pop()
 		print(meta["name"])
 		col.add(requests.get("https://dynasty-scans.com"+page["url"]).content, meta)
 
