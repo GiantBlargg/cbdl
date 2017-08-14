@@ -38,5 +38,9 @@ def _chapter(name, col, meta):
 def _series(name, col, meta):
 	r = requests.get("https://dynasty-scans.com/series/"+name+".json").json()
 	for i in r["taggings"]:
-		print(i["title"])
-		_chapter(i["permalink"],col,meta)
+		if "header" in i:
+			meta["volume"] = i["header"]
+			print(meta["volume"])
+		else:
+			print(i["title"])
+			_chapter(i["permalink"],col,meta)

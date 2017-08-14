@@ -15,10 +15,24 @@ class SquiFile:
 
 class SquiCol:
 	def __init__(self, dest, output):
-		pass
+		self._arcName = None
+		self._arcFile = None
 
 	def add(self, file, meta):
-		arc = SquiFile(meta["title"], "a")
-		destFile = arc.open(meta["name"] + "." + meta["ext"], "w")
+		arcname = self._genArcName(meta)
+		if arcname != self._arcName:
+			if self._arcFile != None:
+				self._arcFile.close()
+
+			self._arcFile = SquiFile(meta["title"], "a")
+
+		destFile = self._arcFile.open(meta["name"] + "." + meta["ext"], "w")
 		destFile.write(file)
-		destFile.close()
+
+	def close():
+		self._arcFile.close()
+		self._arcName = None
+		self._arcFile = None
+
+	def _genArcName(self, meta):
+		return meta["title"]
