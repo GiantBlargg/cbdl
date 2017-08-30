@@ -19,8 +19,8 @@ def _dynasty(loc, col):
 		return _chapter(loc[1], col, {})
 
 
-	if loc[0] == "series":
-		return _series(loc[1], col, {})
+	if loc[0] == "series" or loc[0] == "anthologies":
+		return _series(loc[0],loc[1], col, {})
 
 
 	print(loc[0]+" are unsupported.")
@@ -35,8 +35,8 @@ def _chapter(name, col, meta):
 		print(meta["name"])
 		col.add(requests.get("https://dynasty-scans.com"+page["url"]).content, meta)
 
-def _series(name, col, meta):
-	r = requests.get("https://dynasty-scans.com/series/"+name+".json").json()
+def _series(type, name, col, meta):
+	r = requests.get("https://dynasty-scans.com/"+type+"/"+name+".json").json()
 	for i in r["taggings"]:
 		if "header" in i:
 			meta["volume"] = i["header"]

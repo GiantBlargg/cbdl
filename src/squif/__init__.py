@@ -29,7 +29,7 @@ class SquiCol:
 		destFile = self._arcFile.open(meta["name"] + "." + meta["ext"], "w")
 		destFile.write(file)
 
-	def close():
+	def close(self):
 		self._arcFile.close()
 		self._arcName = None
 		self._arcFile = None
