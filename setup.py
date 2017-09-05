@@ -6,7 +6,7 @@ setup(
 	url="https://github.com/GiantBlargg/cbdl",
 	author="GiantBlargg",
 	license="MIT",
-	install_requires=["requests","click"],
+	install_requires=["requests","click","pystache"],
 	python_requires=">=3",
 	packages=find_packages("src"),
 	package_dir={'':'src'},
