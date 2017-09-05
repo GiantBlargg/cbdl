@@ -46,4 +46,4 @@ class SquiCol:
 	def _genArcName(self, meta):
 		out = pystache.render(self._output, meta).split(";", 1)
 		out[1] = "/".join(out[1].split(";"))
-		return out[0], out[1]
+		return self._dest + "/" + out[0], out[1]
