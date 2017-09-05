@@ -7,9 +7,10 @@ from sites import siteHandle
 @click.option("--dest", "-d", type=click.Path(file_okay=False), default=".")
 @click.option("--archive-type","-t", type=click.Choice(["z"]), default="z")
 @click.option("--output", "-o", default="${series}/${volume}/${chapter}-${title}")
-@click.argument("URL")
+@click.argument("URL", nargs=-1, required=True)
 def main(dest, archive_type, output, url):
 	col = SquiCol(dest, output)
-	siteHandle(url, col)
+	for u in url:
+		siteHandle(u, col)
 	col.close()
 
