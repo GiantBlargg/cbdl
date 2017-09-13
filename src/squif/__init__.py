@@ -44,6 +44,6 @@ class SquiCol:
 		self._arcFile = None
 
 	def _genArcName(self, meta):
-		out = pystache.render(self._output, meta).split(";", 1)
+		out = pystache.render(self._output, meta).split(".cbz", 1)
 		out[1] = "/".join(out[1].split(";"))
 		return self._dest + "/" + out[0], out[1]
