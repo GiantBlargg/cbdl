@@ -1,56 +1,36 @@
 import re
 import requests
 
+handlers = []
+
 
 def siteHandle(url, col):
-	m = re.match("^(?:(.*):\/\/)?([a-zA-Z0-9-\.]+\.[a-zA-Z0-9-]+)(?:\/(.*))?$",
-														url)
-	if m == None:
-		print("Invalid URL")
-		exit(1)
-
-	if m.group(2) != "dynasty-scans.com":
-		print(m.group(2) + " is not supported.")
-		exit(1)
-
-	_dynasty(m.group(3), col)
+	for h in handlers:
+		if h(url, col):
+			return True
+	return False
 
 
 def simpleDownload(url):
 	return lambda: requests.get(url).content
 
 
-def _dynasty(loc, col):
-	loc = loc.split("/")
-	if loc[0] == "chapters":
-		return _chapter(loc[1], col, {})
+def include(regexString):
+	regex = re.compile(regexString)
 
-	if loc[0] == "series" or loc[0] == "anthologies":
-		return _series(loc[0], loc[1], col, {})
+	def append(f):
 
-	print(loc[0] + " are unsupported.")
-	exit(1)
+		def wrap(url, col):
+			m = regex.match(url)
+			if m == None:
+				return False
+			f(url, m, col)
+			return True
 
+		handlers.append(wrap)
+		return f
 
-def _chapter(name, col, meta):
-	r = requests.get("https://dynasty-scans.com/chapters/" + name + ".json").json()
-	meta["title"] = r["title"]
-	for tag in r["tags"]:
-		if tag["type"] == "Series":
-			meta["series"] = tag["name"]
-	for page in r["pages"]:
-		meta["name"] = page["name"]
-		meta["ext"] = page["url"].split(".").pop()
-		print(meta["name"])
-		col.add(simpleDownload("https://dynasty-scans.com" + page["url"]), meta)
+	return append
 
 
-def _series(type, name, col, meta):
-	r = requests.get("https://dynasty-scans.com/" + type + "/" + name + ".json").json()#yapf:disable
-	for i in r["taggings"]:
-		if "header" in i:
-			meta["volume"] = i["header"]
-			print(meta["volume"])
-		else:
-			print(i["title"])
-			_chapter(i["permalink"], col, meta)
+import sites.dynasty
